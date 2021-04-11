@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>covid 19 tracker</title>
+    <style>
+        body {
+            background-image: url("../covid19/corona.jpg");
+            background-position: inherit;
+            background-repeat: repeat-y;
+            background-size: cover;
+        }
+
+        #inputs {
+            position: absolute;
+            top: 40px;
+            left: 337px;
+        }
+
+
+        
+    </style>
+</head>
+
+<body>
+    <div id="inputs">
+        <form id="myForm">
+            <input id="country" type="text" placeholder="country">
+            <input id="date1" type="date" placeholder="dd-mm-yy">
+            <input id="date2" type="date" placeholder="dd-mm-yy">
+            <input type="submit">
+        </form>
+    </div>
+
+
+</body>
+<script>
+    var myForm = document.getElementById('myForm');
+    myForm.addEventListener('submit', function (e) {
+
+        e.preventDefault();
+        var countryData;
+        var country = document.getElementById('country').value;
+        var dateFrom = document.getElementById('date1').value;
+        var dateTo = document.getElementById('date2').value;
+        var url = "https://api.covid19api.com/country/" + country + "?from=" + dateFrom + "T00:00:00Z&to=" + dateTo + "T00:00:00Z";
+        fetch(url)
+            .then((res) => res.json())
+            .then((res) => {
+                console.log(res);
+                var length = res.length;
+                var index = length - 1;
+                var input = document.getElementById('inputs');
+
+                for (var i = 0; i <= index; i++) {
+                    var containerDiv = document.createElement('div');
+                    containerDiv.setAttribute('id', 'main' + i);
+                    var confirmed = document.createElement('h2');
+                    confirmed.setAttribute('id', 'confirmed');
+                    confirmed.append("Confirmed cases: " + res[i].Confirmed);
+                    var active = document.createElement('h2');
+                    active.setAttribute('id', 'active');
+                    active.append("Active cases: " + res[i].Active);
+                    var deaths = document.createElement('h2');
+                    deaths.setAttribute('id', 'active');
+                    deaths.append("Death cases: " + res[i].Deaths);
+                    containerDiv.append(confirmed);
+                    containerDiv.append(active);
+                    containerDiv.append(deaths);
+                    input.append(containerDiv);
+
+                    document.getElementById('main' + i).style.backgroundColor = "blue";
+                    document.getElementById('main' + i).style.display = "block";
+
+                }
+
+            })
+
+    })
+</script>
+
+</html>
